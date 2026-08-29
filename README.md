@@ -1,12 +1,12 @@
 # FloodGuard 🌊
 
-An AI-powered web application for detecting flooded areas in images using a trained U-Net segmentation model.
+An AI-powered web application for flood-region detection using a U-Net-based image segmentation model.
 
 ## Overview
 
-FloodGuard is an academic project developed to explore the use of computer vision and deep learning for flood detection.
+FloodGuard is an academic project that explores computer vision and deep learning for identifying flooded regions in images.
 
-The application allows a user to upload an image through a web interface. The image is preprocessed and passed through a trained U-Net model, which generates a segmentation mask for the detected flood regions. The resulting mask is overlaid on the original image and displayed to the user.
+The project combines a custom U-Net-based segmentation model with a Flask web application. Users can upload an image through the web interface, after which the backend preprocesses the image and generates a pixel-level flood segmentation mask. The predicted mask is then overlaid on the original image for visualization.
 
 ## Features
 
@@ -23,7 +23,8 @@ The application allows a user to upload an image through a web interface. The im
 - Python
 - TensorFlow
 - Keras
-- U-Net
+- U-Net-based segmentation
+- Attention gates
 
 ### Image Processing
 - OpenCV
@@ -48,6 +49,30 @@ The application allows a user to upload an image through a web interface. The im
 6. A threshold is applied to identify the predicted flood regions.
 7. The mask is overlaid on the original image.
 8. The processed image is returned to the frontend and displayed to the user.
+
+## Model Architecture
+
+The project uses a U-Net-based encoder-decoder architecture for image segmentation. The encoder progressively extracts spatial features while reducing the image dimensions, and the decoder reconstructs the segmentation output using skip connections.
+
+The architecture includes attention gates to help the model focus on relevant spatial features during decoding.
+
+The main stages are:
+
+```text
+Input Image (256 × 256 × 3)
+        ↓
+Encoder
+64 → 128 → 256 → 512 filters
+        ↓
+Bottleneck
+1024 filters
+        ↓
+Decoder
+512 → 256 → 128 → 64 filters
+        ↓
+Sigmoid Output
+        ↓
+Flood Segmentation Mask
 
 ## Project Structure
 
