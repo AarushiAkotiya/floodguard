@@ -10,7 +10,7 @@ import cv2
 app = Flask(__name__)
 
 # Load the trained U-Net model
-MODEL_PATH = 'model.h5'
+MODEL_PATH = 'flood_segmentation_unet.h5'
 try:
     model = load_model(MODEL_PATH)
     print("Model loaded successfully.")
