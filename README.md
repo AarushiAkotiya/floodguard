@@ -55,8 +55,54 @@ The application allows a user to upload an image through a web interface. The im
 FloodGuard/
 │
 ├── app.py
-├── index.html
 ├── Flooddetecting.ipynb
-├── model.h5
+├── README.md
+├── requirements.txt
 ├── .gitignore
-└── README.md
+│
+└── templates/
+    └── index.html
+```
+
+## Setup and Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/AarushiAkotiya/floodguard.git
+cd floodguard
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Add the trained model
+
+Place the trained U-Net model file in the project directory with the filename:
+
+```text
+model.h5
+```
+
+### 4. Run the application
+
+```bash
+python app.py
+```
+
+The application will be available at:
+
+```text
+http://localhost:5000
+```
+
+## Future Improvements
+
+- Improve model performance with larger and more diverse datasets
+- Add support for additional satellite imagery sources
+- Integrate flood maps and geographical information
+- Deploy the application as a cloud-based service
+- Add automated flood alerts and monitoring
