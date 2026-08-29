@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloodGuard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .container {
+            max-width: 800px;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased text-gray-800">
+
+    <div class="bg-blue-600 text-white p-4 shadow-lg">
+        <nav class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">FloodGuard</h1>
+
+            <div>
+                <a href="#" class="mx-2 hover:underline">Home</a>
+                <a href="#" class="mx-2 hover:underline">Flood Map</a>
+                <a href="#" class="mx-2 hover:underline">About</a>
+            </div>
+        </nav>
+    </div>
+
+    <main class="container mx-auto p-6">
+
+        <section class="text-center mb-8">
+            <h2 class="text-4xl font-extrabold text-blue-800 mb-2">
+                Identify Floods Instantly
+            </h2>
+
+            <p class="text-gray-600 text-lg">
+                Upload a satellite image to detect flooded areas with our AI-powered model.
+            </p>
+        </section>
+
+        <section class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+
+            <h3 class="text-2xl font-bold text-gray-700 mb-4">
+                Analyze an Image
+            </h3>
+
+            <div class="flex flex-col items-center space-y-4">
+
+                <input
+                    type="file"
+                    id="image-upload"
+                    accept="image/*"
+                    class="w-full text-gray-600
+                           file:mr-4 file:py-2 file:px-4
+                           file:rounded-full file:border-0
+                           file:text-sm file:font-semibold
+                           file:bg-blue-50 file:text-blue-700
+                           hover:file:bg-blue-100 cursor-pointer"
+                >
+
+                <div id="loading" class="hidden text-center">
+
+                    <div class="animate-spin rounded-full h-8 w-8
+                                border-t-2 border-b-2 border-blue-500 mx-auto">
+                    </div>
+
+                    <p class="mt-2 text-gray-500">
+                        Analyzing image...
+                    </p>
+
+                </div>
+
+                <div id="preview-area" class="mt-4 w-full">
+
+                    <h4 class="text-lg font-semibold text-gray-700 mb-2">
+                        Original Image
+                    </h4>
+
+                    <img
+                        id="image-preview"
+                        src="#"
+                        alt="Image Preview"
+                        class="hidden w-full h-auto rounded-lg shadow-md
+                               max-h-96 object-contain"
+                    >
+
+                </div>
+
+                <div id="result-area" class="hidden mt-6 w-full">
+
+                    <h4 class="text-lg font-semibold text-gray-700 mb-2">
+                        Flood Detection Result
+                    </h4>
+
+                    <img
+                        id="result-image"
+                        src="#"
+                        alt="Result Image"
+                        class="w-full h-auto rounded-lg shadow-md
+                               max-h-96 object-contain"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-100 text-center text-gray-500 p-4 mt-8 text-sm">
+        &copy; 2024 FloodGuard. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            const resultArea = document.getElementById('result-area');
+            const resultImage = document.getElementById('result-image');
+            const loading = document.getElementById('loading');
+            const previewArea = document.getElementById('preview-area');
+
+            imageUpload.addEventListener('change', async (event) => {
+
+                const file = event.target.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                loading.classList.remove('hidden');
+                resultArea.classList.add('hidden');
+                previewArea.classList.add('hidden');
+
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                    previewArea.classList.remove('hidden');
+
+                };
+
+                reader.readAsDataURL(file);
+
+                const formData = new FormData();
+                formData.append('image', file);
+
+                try {
+
+                    const response = await fetch('/analyze-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`
+                        );
+                    }
+
+                    const blob = await response.blob();
+                    const imageUrl = URL.createObjectURL(blob);
+
+                    resultImage.src = imageUrl;
+                    resultArea.classList.remove('hidden');
+
+                } catch (error) {
+
+                    console.error(
+                        'Error analyzing image:',
+                        error
+                    );
+
+                    alert(
+                        'Error: Failed to analyze image. Please try again.'
+                    );
+
+                } finally {
+
+                    loading.classList.add('hidden');
+
+                }
+
+            });
+
+        });
+    </script>
+
+</body>
+</html>
